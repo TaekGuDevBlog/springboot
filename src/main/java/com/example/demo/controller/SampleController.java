@@ -16,4 +16,9 @@ public class SampleController {
     public String test2Mapping() {
         return "test";
     }
+
+    @RequestMapping(value = "/test3", method = RequestMethod.GET)
+    public String test3Mapping() {
+        return "test";
+    }
 }
