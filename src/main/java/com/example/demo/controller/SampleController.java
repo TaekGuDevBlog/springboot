@@ -21,4 +21,9 @@ public class SampleController {
     public String test3Mapping() {
         return "test";
     }
+
+    @RequestMapping(value = "/test4", method = RequestMethod.GET)
+    public String test4Mapping() {
+        return "test";
+    }
 }
