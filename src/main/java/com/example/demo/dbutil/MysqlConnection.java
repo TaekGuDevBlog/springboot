@@ -1,9 +1,7 @@
 package com.example.demo.dbutil;
 
-import com.example.demo.util.PropertyLoader;
+import com.example.demo.config.MysqlConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,41 +9,15 @@ import java.sql.SQLException;
 
 @Slf4j
 public class MysqlConnection {
-    private static final String PROPERTIES_FILE = "mysql.properties";
-    private static final String mysqlClassForName = ("com.mysql.jdbc.Driver");
-
-    private static String dbIp;
-    private static int dbPort;
-    private static String dbSchema;
-    private static String dbId;
-    private static String dbPw;
-
-    public static Connection getConnection() {
-        readMysqlDBMetaConfiguration();
+    public static Connection getConnection(MysqlConfig mysqlConfig) {
         Connection connection = null;
         try {
-            Class.forName(mysqlClassForName);
-            String connectionString = String.format("jdbc:mysql://%s:%d/%s", dbIp, dbPort, dbSchema);
-            connection = DriverManager.getConnection(connectionString, dbId, dbPw);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String connectionString = String.format("jdbc:mysql://%s:%d/%s?serverTimezone=UTC", mysqlConfig.getIp(), mysqlConfig.getPort(), mysqlConfig.getSchema());
+            connection = DriverManager.getConnection(connectionString, mysqlConfig.getId(), mysqlConfig.getPw());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-
         return connection;
-    }
-
-    private static void readMysqlDBMetaConfiguration() {
-        try {
-            Configuration config = PropertyLoader.loadConfigFile(PROPERTIES_FILE);
-
-            dbIp = (String) config.getProperty("ip");
-            dbPort = (Integer) config.getProperty("port");
-            dbSchema = (String) config.getProperty("schema");
-            dbId = (String) config.getProperty("id");
-            dbPw = (String) config.getProperty("pw");
-
-        } catch (ConfigurationException e) {
-            log.error("{}", e);
-        }
     }
 }

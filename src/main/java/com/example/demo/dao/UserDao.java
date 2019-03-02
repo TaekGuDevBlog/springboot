@@ -1,8 +1,11 @@
 package com.example.demo.dao;
 
+import com.example.demo.config.MysqlConfig;
 import com.example.demo.dbutil.MysqlConnection;
 import com.example.demo.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,9 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Component
 public class UserDao {
+
+    @Autowired
+    MysqlConfig mysqlConfig;
+
     public void insertUserInfo(MemberVO memberVO) {
-        Connection connection = MysqlConnection.getConnection();
+        Connection connection = MysqlConnection.getConnection(mysqlConfig);
         PreparedStatement preparedStatement = null;
 
         String insertSql = "insert into today_meal.member_info (member_id, member_pw, member_name) values (?, ?, ?)";
@@ -37,10 +45,10 @@ public class UserDao {
 
     public void updateUserInfo(MemberVO memberVO) {
         // only change password
-        Connection connection = MysqlConnection.getConnection();
+        Connection connection = MysqlConnection.getConnection(mysqlConfig);
         PreparedStatement preparedStatement;
 
-        String updateSql = "update today_meal.member_info set member_pwd = ? where member_id = ?";
+        String updateSql = "update today_meal.member_info set member_pw = ? where member_id = ?";
 
         try {
             preparedStatement = connection.prepareStatement(updateSql);
@@ -59,7 +67,7 @@ public class UserDao {
     }
 
     public void deleteUserInfo(MemberVO memberVO) {
-        Connection connection = MysqlConnection.getConnection();
+        Connection connection = MysqlConnection.getConnection(mysqlConfig);
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String tempPw;
@@ -78,7 +86,7 @@ public class UserDao {
                     String deleteSql = "delete from today_meal.member_info where member_id = ?";
                     preparedStatement = connection.prepareStatement(deleteSql);
                     preparedStatement.setString(1, memberVO.getMemberId());
-                    preparedStatement.executeUpdate(deleteSql);
+                    preparedStatement.executeUpdate();
                 }
             }
 
@@ -92,7 +100,7 @@ public class UserDao {
 
     public MemberVO selectOneUserInfo(String memberId) {
         MemberVO memberVO = new MemberVO();
-        Connection connection = MysqlConnection.getConnection();
+        Connection connection = MysqlConnection.getConnection(mysqlConfig);
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String selectSql = "select * from today_meal.member_info where member_id = ?";
@@ -121,7 +129,7 @@ public class UserDao {
 
     public List<MemberVO> selectAllUserInfo() {
         List<MemberVO> memberVOList = new ArrayList<>();
-        Connection connection = MysqlConnection.getConnection();
+        Connection connection = MysqlConnection.getConnection(mysqlConfig);
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String selectSql = "select * from today_meal.member_info";
