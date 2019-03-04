@@ -35,7 +35,7 @@ public class UserDao {
             preparedStatement.executeUpdate(); // insert
 
             log.info("New columns add in member_info table");
-
+            log.info(memberVO.toString(memberVO));
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {

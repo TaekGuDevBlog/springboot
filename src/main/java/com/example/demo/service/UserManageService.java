@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.config.MysqlConfig;
 import com.example.demo.dao.UserDao;
 import com.example.demo.vo.MemberVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +23,11 @@ public class UserManageService {
     }
 
     //if password equals delete
-    public void UserDelete(MemberVO memberVO) {
-        userDao.deleteUserInfo(memberVO);
-
-    }
+    public void UserDelete(MemberVO memberVO) { userDao.deleteUserInfo(memberVO); }
 
     public MemberVO UserSelectOne(String memberId) {
         return userDao.selectOneUserInfo(memberId);
     }
 
-    public List<MemberVO> UserSelectAll() {
-        return userDao.selectAllUserInfo();
-    }
+    public List<MemberVO> UserSelectAll() { return userDao.selectAllUserInfo(); }
 }
